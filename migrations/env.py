@@ -1,4 +1,5 @@
 from __future__ import with_statement
+from app.models import db, User, Story, Follow, Tag
 
 import logging
 from logging.config import fileConfig
@@ -89,16 +90,19 @@ def run_migrations_online():
             target_metadata=target_metadata,
             process_revision_directives=process_revision_directives,
             **current_app.extensions['migrate'].configure_args
-        )
-        # Create a schema (only in production)
-        if environment == "production":
+    )
+
+    # Create a schema (only in production and not in SQLite)
+        if environment == "production" and connection.dialect.name != "sqlite":
             connection.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}")
 
-        # Set search path to your schema (only in production)
+    # Set search path to your schema (only in production and not in SQLite)
         with context.begin_transaction():
-            if environment == "production":
+            if environment == "production" and connection.dialect.name != "sqlite":
                 context.execute(f"SET search_path TO {SCHEMA}")
+
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

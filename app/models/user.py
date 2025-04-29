@@ -14,6 +14,12 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
 
+    stories  = db.relationship('Story', back_populates='user')
+    comments = db.relationship('Comment', back_populates='user')
+    followers  = db.relationship('Follow', foreign_keys='Follow.followed_id',  back_populates='followed', cascade='all, delete-orphan')
+    following  = db.relationship('Follow',  foreign_keys='Follow.follower_id', back_populates='follower', cascade='all, delete-orphan')
+
+
     @property
     def password(self):
         return self.hashed_password
