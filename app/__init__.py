@@ -40,16 +40,29 @@ def create_app():
     CORS(app)
 
     # ─── register blueprints ─────────────────────────────────────
-    from .api.stories import stories_bp
-    app.register_blueprint(stories_bp)
+
 
     from .api.user_routes import user_routes
     from .api.auth_routes import auth_routes
     app.register_blueprint(user_routes, url_prefix='/api/users')
     app.register_blueprint(auth_routes, url_prefix='/api/auth')
 
+    from .api.stories import stories_bp
+    app.register_blueprint(stories_bp)
+
     from .api.photos import photos_bp
     app.register_blueprint(photos_bp)
+
+    from .api.comments import comments_bp
+    app.register_blueprint(comments_bp)
+
+    from .api.follow import follow_bp
+    app.register_blueprint(follow_bp)
+
+    from .api.tags import tags_bp
+    app.register_blueprint(tags_bp)
+
+
 
 
     # ─── login manager ───────────────────────────────────────────

@@ -5,6 +5,9 @@ from .stories import Story, story_tags
 class Tag(db.Model):
     __tablename__ = 'tags'
 
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, unique=True)
 

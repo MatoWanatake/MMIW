@@ -30,7 +30,7 @@ class Story(db.Model):
     tags = db.relationship("Tag", secondary=story_tags, back_populates="stories")
     photos = db.relationship('Photo', back_populates='story', cascade='all, delete-orphan')
 
-    def to_dict(self):
+    def to_dict(self, include_tags=False, include_photos=False):
         return {
             'id': self.id,
             'title': self.title,
@@ -42,3 +42,11 @@ class Story(db.Model):
             'updated_at': self.updated_at,
             'user_id': self.user_id
         }
+
+        if include_tags:
+            data['tags'] = [t.to_dict() for t in self.tags]
+
+        if include_photos:
+            data['photos'] = [t.to_dict() for p in photos]
+
+        return data

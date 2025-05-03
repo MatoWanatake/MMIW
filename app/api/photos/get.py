@@ -15,7 +15,7 @@ def get_photos():
         for p in photos
     ]), 200
 
-@photos_bp.route('/int:id>', method=['GET'])
+@photos_bp.route('/int:id>', methods=['GET'])
 def get_photo(id):
     # GET photo by id
     p = Photo.query.get_or_404(id)
