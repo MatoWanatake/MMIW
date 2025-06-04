@@ -1,20 +1,26 @@
+// vite.config.js (at your project root)
 import { defineConfig } from "vite";
-import eslintPlugin from "vite-plugin-eslint";
 import react from "@vitejs/plugin-react";
+import eslintPlugin from "vite-plugin-eslint";
 
-// https://vitejs.dev/config/
-export default defineConfig((mode) => ({
+export default defineConfig({
   plugins: [
     react(),
     eslintPlugin({
       lintOnStart: true,
-      failOnError: mode === "production",
+      failOnError: false,
     }),
   ],
+
   server: {
+    port: 5173,
     open: true,
     proxy: {
-      "/api": "http://127.0.0.1:8000",
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
-}));
+});

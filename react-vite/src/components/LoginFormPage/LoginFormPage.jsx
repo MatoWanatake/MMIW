@@ -1,66 +1,78 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { thunkLogin } from "../../redux/session";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
-function LoginFormPage() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
 
-  if (sessionUser) return <Navigate to="/" replace={true} />;
+function LoginFormModal() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { closeModal } = useModal();
+
+  const [email, setEmail]       = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors]     = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const serverResponse = await dispatch(
-      thunkLogin({
-        email,
-        password,
-      })
-    );
-
-    if (serverResponse) {
-      setErrors(serverResponse);
+    // console.log("Logging in with", email, password);
+    const result = await dispatch(thunkLogin({ email, password }));
+    // thunkLogin returns either user-data or error-object
+    if (result.errors) {
+      setErrors(result.errors);
     } else {
+      closeModal();
       navigate("/");
     }
   };
 
+  // const quickLogin = async ({ email, password }) => {
+  //   // we still need to prevent the form submission
+  //   const fakeEvent = { preventDefault: () => {} };
+  //   await handleSubmit({ ...fakeEvent, target: null }, email, password);
+  // };
+
   return (
-    <>
-      <h1>Log In</h1>
-      {errors.length > 0 &&
-        errors.map((message) => <p key={message}>{message}</p>)}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
+    <div className="login-form-modal">
+      <h2>Welcome Back!</h2>
+
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="row">
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
+            name="email"
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="Email"
           />
-        </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Password
+          {errors.email && <p className="error">{errors.email}</p>}
+        </div>
+
+        <div className="row">
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
+            name="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Password"
           />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
-        <button type="submit">Log In</button>
+          {errors.password && <p className="error">{errors.password}</p>}
+        </div>
+
+        <div className="row full">
+          <button type="submit">Log In</button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 
-export default LoginFormPage;
+export default LoginFormModal;

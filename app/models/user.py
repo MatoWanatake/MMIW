@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
 
     stories  = db.relationship('Story', back_populates='user')
     comments = db.relationship('Comment', back_populates='user')
+    photos = db.relationship('Photo', back_populates='user')
     followers  = db.relationship('Follow', foreign_keys='Follow.followed_id',  back_populates='followed', cascade='all, delete-orphan')
     following  = db.relationship('Follow',  foreign_keys='Follow.follower_id', back_populates='follower', cascade='all, delete-orphan')
 
