@@ -1,41 +1,79 @@
-import os
+# app/api/stories/post.py
+import os, base64, traceback
+from uuid import uuid4
 from flask import request, jsonify, current_app
-from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
+from werkzeug.exceptions import HTTPException
 from app.models import Story, Photo, db
 from . import stories_bp
+
 
 @stories_bp.route('', methods=['POST'])
 @login_required
 def create_story():
-    """Create a new story (with optional photo uploads)."""
-    # 1) Grab text fields from the multipart/form-data body
-    title   = request.form.get('title')
-    content = request.form.get('content')
+    print("🛎️  create_story called with form:", request.form.to_dict(), "files:", request.files)
 
-    # 2) Create the Story row
-    new_story = Story(
-        title   = title,
-        content = content,
-        user_id = current_user.id
-    )
-    db.session.add(new_story)
-    db.session.flush()
+    try:
+        data = request.get_json(force=True) or {}
 
-    # 3) Handle file uploads under name="photos"
-    files = request.files.getlist('photos')
-    for f in files:
-        if f and f.filename:
-            filename = secure_filename(f.filename)
+        # required fields
+        title           = data.get('title', '').strip()
+        content         = data.get('content', '').strip()
+        country         = data.get('country', '').strip()
+        state_or_region = data.get('state_or_region', '').strip()
+        status          = data.get('status', None)
+
+        if not all([title, content, country, state_or_region]):
+            return jsonify({"error": "Missing one of [title, content, country, state_or_region, status]"}), 400
+
+        # 1) create story record
+        new_story = Story(
+            title=title, content=content,
+            country=country, state_or_region=state_or_region,
+            status=status, user_id=current_user.id
+        )
+        db.session.add(new_story)
+        db.session.flush()
+
+        # 2) handle Base64 photos
+        for img_str in data.get('photos', []):
+            if not isinstance(img_str, str) or ',' not in img_str:
+                continue
+
+            header, b64data = img_str.split(",", 1)
+            try:
+                ext = header.split(';')[0].split('/')[1]
+                binary = base64.b64decode(b64data)
+            except Exception:
+                continue
+
+            filename = f"{uuid4()}.{ext}"
             save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            f.save(save_path)
 
-            # Build a URL clients can fetch
+            try:
+                with open(save_path, 'wb') as f:
+                    f.write(binary)
+            except IOError:
+                continue
+
             url = f"{request.url_root.rstrip('/')}/uploads/{filename}"
             db.session.add(Photo(story_id=new_story.id, url=url))
 
-    # 4) Commit both Story + Photo rows in one go
-    db.session.commit()
+        # 3) commit all
+        db.session.commit()
+        return jsonify(new_story.to_dict(include_photos=True)), 201
 
-    # 5) Return the new story with its photo URLs
-    return jsonify(new_story.to_dict(include_photos=True)), 201
+    except HTTPException:
+        # Let Flask handle its own HTTP errors (400, 401, etc)
+        raise
+
+    except Exception as e:
+        # Roll back and give me something useful
+        traceback.print_exc()
+
+        db.session.rollback()
+        current_app.logger.error(traceback.format_exc())
+        return jsonify({
+            "error": "Could not create story",
+            "details": str(e)
+        }), 500

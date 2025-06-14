@@ -1,0 +1,36 @@
+src/
+└── components/
+    ├── Layout.jsx               # your app shell (header/nav + <Outlet/>)
+    ├── NavBar.jsx               # top-level navigation links
+    ├── Modal/
+    │   ├── Modal.jsx            # generic “portal” + backdrop
+    │   └── CommentModal.jsx     # wraps CommentForm in a Modal
+    │
+    ├── Auth/
+    │   ├── LoginFormPage.jsx    # page at /login, uses <LoginForm/>
+    │   ├── SignupFormPage.jsx   # page at /signup, uses <SignupForm/>
+    │   ├── LoginForm.jsx        # controlled inputs + dispatch thunkLogin
+    │   └── SignupForm.jsx       # controlled inputs + dispatch thunkSignup
+    │
+    ├── Stories/
+    │   ├── StoriesPage.jsx      # page at “/” or “/stories”, fetches & lists
+    │   ├── StoryList.jsx        # maps stories → <StoryCard/>
+    │   ├── StoryCard.jsx        # title/preview + link to detail
+    │   ├── StoryDetailPage.jsx  # page at /stories/:id, fetches one story
+    │   ├── StoryDetail.jsx      # renders story content + comments + photos
+    │   └── StoryForm.jsx        # (optional) for create/edit story
+    │
+    ├── Comments/
+    │   ├── CommentList.jsx      # inside story detail, lists <CommentItem/>
+    │   ├── CommentItem.jsx      # single comment display
+    │   └── CommentModal.jsx     # your “add comment” form inside a Modal
+    │
+    ├── Tags/
+    │   ├── TagsPage.jsx         # page at /tags, fetches & lists tags
+    │   ├── TagList.jsx          # maps tags → <TagItem/>
+    │   └── TagItem.jsx          # single tag (with count or link)
+    │
+    └── Follows/
+        ├── FollowsPage.jsx      # page at /follows, fetches & lists
+        ├── FollowList.jsx       # maps follows → <FollowItem/>
+        └── FollowItem.jsx       # single follow (unfollow button)

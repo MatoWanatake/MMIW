@@ -20,6 +20,6 @@ class Photo(db.Model):
             'id': self.id,
             'url': self.url,
             'story_id': self.story_id,
-            'user_id': self.user_id,
-            'created_at': self.created_at
+            'user_id': self.user_id.isoformat(),
+            'created_at': self.created_at.isoformat()
         }

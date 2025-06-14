@@ -5,7 +5,7 @@ from  . import comments_bp
 
 @comments_bp.route('/<int:id>', methods=['DELETE'])
 @login_required
-def delete_comment():
+def delete_comment(id):
 
     # DELETE a comment
 
