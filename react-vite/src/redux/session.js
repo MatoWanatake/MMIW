@@ -1,5 +1,3 @@
-// import { json } from "react-router-dom";
-
 const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
 
@@ -80,3 +78,4 @@ function sessionReducer(state = initialState, action) {
 }
 
 export default sessionReducer;
+export const selectCurrentUser = state => state.session.user;
