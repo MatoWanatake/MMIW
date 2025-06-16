@@ -59,7 +59,8 @@ class Story(db.Model):
             'status':          self.status,
             'created_at':      self.created_at.isoformat(),
             'updated_at':      self.updated_at.isoformat(),
-            'user_id':         self.user_id
+            'user_id':         self.user_id,
+            'username':        self.user.username
         }
 
         if include_tags:

@@ -54,7 +54,7 @@ app.register_blueprint(tags_bp)
 # Extensions
 db.init_app(app)
 Migrate(app, db)
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 # ─── HTTPS redirect in production ───────────────────────────────
 @app.before_request

@@ -24,5 +24,6 @@ class Comment(db.Model):
             'user_id': self.user_id,
             'story_id': self.story_id,
             'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat()
+            'updated_at': self.updated_at.isoformat(),
+            'username': self.user.username
         }
