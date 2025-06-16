@@ -1,4 +1,3 @@
-import React from "react";
 import CreateStoryForm from "./CreateStoryForm";
 
 export default function CreateStoryPage() {

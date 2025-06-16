@@ -1,4 +1,3 @@
-import React from "react";
 import OpenModalButton from "../OpenModalButton";
 import CreateStoryForm from "./CreateStoryForm";
 import { useModal } from "../../context/Modal";
