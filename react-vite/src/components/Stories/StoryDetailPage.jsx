@@ -11,6 +11,9 @@ import StoryDetail from "./StoryDetail";
 import EditStoryForm from "./EditStoryForm";
 import CommentSection from "../Comments/CommentSection";
 import { fetchTags, createTag, deleteTag } from "../../redux/tags";
+import './StoryDetailPage.css';
+import FollowButton from "../Follows/FollowButton";
+
 
 export default function StoryDetailPage() {
   const { id } = useParams();
@@ -46,47 +49,62 @@ export default function StoryDetailPage() {
 
   return (
     <div>
-      <StoryDetail story={story} />
+      <div className="story-detail-container">
+        <StoryDetail story={story} />
+        <p className="story-author">By: {story.username}</p>
 
-      {currentUser?.id === story.user_id && (
-        <>
-          {!showEdit && <button onClick={() => setShowEdit(true)}>Edit</button>}
-          <button onClick={handleDelete}>Delete</button>
-        </>
-      )}
+        {currentUser?.id !== story.user_id && (
+          <FollowButton user={story} currentUser={currentUser} />
+        )}
 
-      {showEdit && (
-        <EditStoryForm
-          story={story}
-          onClose={() => {
-            setShowEdit(false);
-            dispatch(fetchStory(id));
-          }}
-        />
-      )}
+        {currentUser?.id === story.user_id && (
+          <>
+            {!showEdit && (
+              <button onClick={() => setShowEdit(true)}>Edit</button>
+            )}
+            <button onClick={handleDelete}>Delete</button>
+          </>
+        )}
 
-      <section>
-        <h4>Tags</h4>
-        <ul>
-        {(tags || []).map((tag) => (
-  <li key={tag.id}>
-    {tag.name}
-    <button onClick={() => dispatch(deleteTag(tag.id))}>x</button>
-  </li>
-))}
-
-        </ul>
-        <form onSubmit={handleAddTag}>
-          <input
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            placeholder="Add tag"
+        {showEdit && (
+          <EditStoryForm
+            story={story}
+            onClose={() => {
+              setShowEdit(false);
+              dispatch(fetchStory(id));
+            }}
           />
-          <button type="submit">Add</button>
-        </form>
-      </section>
+        )}
 
-      <CommentSection storyId={story.id} />
+        <section>
+          <h4>Tags</h4>
+          <ul>
+            {(tags || []).map((tag) => (
+              <li key={tag.id}>
+                {tag.name}
+                {currentUser?.id === story.user_id && (
+                  <button onClick={() => dispatch(deleteTag(tag.id))}>x</button>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {currentUser?.id === story.user_id && (
+            <form onSubmit={handleAddTag}>
+              <input
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="Add tag"
+              />
+              <button type="submit">Add</button>
+            </form>
+          )}
+        </section>
+      </div>
+
+      <div className="comment-section-container">
+        <CommentSection storyId={story.id} />
+      </div>
     </div>
   );
 }

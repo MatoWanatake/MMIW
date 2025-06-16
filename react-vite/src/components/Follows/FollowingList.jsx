@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import UserCard from "../Users/UserCard";
+import "./FollowingFollower.css";
 
 export default function FollowingList() {
   const currentUser = useSelector((state) => state.session.user);
@@ -23,8 +24,8 @@ export default function FollowingList() {
         );
         const users = await Promise.all(userPromises);
         setFollowing(users);
-        setLoading(false);
       }
+      setLoading(false);
     }
 
     fetchFollowing();
@@ -33,11 +34,11 @@ export default function FollowingList() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
-      <h2>People You Follow</h2>
+    <section className="follow-container">
+      <h2 className="follow-title">People You Follow</h2>
       {following.map((user) => (
         <UserCard key={user.id} user={user} />
       ))}
-    </div>
+    </section>
   );
 }

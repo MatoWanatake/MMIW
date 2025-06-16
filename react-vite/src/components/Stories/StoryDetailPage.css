@@ -1,0 +1,19 @@
+.story-detail-container {
+    background-color: black;
+    border: 3px solid yellow;
+    padding: 2rem;
+    margin: 2rem auto;
+    border-radius: 10px;
+    color: white;
+    max-width: 800px;
+  }
+
+  .comment-section-container {
+    background-color: #d31919;
+    border: 3px solid yellow;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    border-radius: 10px;
+    color: white;
+    max-width: 800px;
+  }

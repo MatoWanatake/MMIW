@@ -1,0 +1,26 @@
+.story-card {
+    background-color: #d31919;
+    border: 2px solid #ccc;
+    color: white;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .story-card a {
+    color: yellow;
+    text-decoration: none;
+  }
+
+  .story-card a:hover {
+    text-decoration: underline;
+  }
+
+  .story-author {
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  .story-list {
+    margin-top: 100px;
+    padding: 0 1rem;
+  }

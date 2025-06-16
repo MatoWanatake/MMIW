@@ -14,6 +14,7 @@ function Navigation() {
         <li><NavLink to="/">Home</NavLink></li>
         {currentUser && (
           <>
+            <li><NavLink to="/stories">See Stories</NavLink></li>
             <li><NavLink to="/stories/new">Create Story</NavLink></li>
             <li><NavLink to={`/users/${currentUser.id}/following`}>Following</NavLink></li>
             <li><NavLink to={`/users/${currentUser.id}/followers`}>Followers</NavLink></li>
