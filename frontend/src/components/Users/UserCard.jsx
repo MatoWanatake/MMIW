@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import FollowButton from '../follows/FollowButton';
+import FollowButton from '../Follows/FollowButton';
 
 export default function UserCard({ user }) {
     const currentUser = useSelector((state) => state.session.user);

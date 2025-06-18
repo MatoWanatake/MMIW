@@ -1,24 +1,57 @@
-FROM python:3.9.18-alpine3.18
+# FRONTEND IMAGE
+FROM --platform=amd64 node:18 AS frontend
 
-RUN apk add build-base
+WORKDIR /frontend
 
-RUN apk add postgresql-dev gcc python3-dev musl-dev
+COPY ./frontend/package.json .
 
-ARG FLASK_APP
-ARG FLASK_ENV
-ARG DATABASE_URL
-ARG SCHEMA
-ARG SECRET_KEY
+RUN npm install
+
+COPY ./frontend/ .
+
+RUN npm run build
+
+
+# BACKEND IMAGE --- production
+FROM --platform=amd64 python:3.9.4
+
 
 WORKDIR /var/www
 
-COPY requirements.txt .
+# environment varialbes
+ENV FLASK_APP=app
+ENV FLAKS_ENV=production
 
-RUN pip install -r requirements.txt
-RUN pip install psycopg2
+# fill these 3 in on docker container / render environments
+ARG SCHEMA
+ENV SCHEMA=${SCHEMA}
 
-COPY . .
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
-RUN flask db upgrade
-RUN flask seed all
-CMD gunicorn app:app
+ARG SECRET_KEY=banana
+ENV SECRET_KEY=${SECRET_KEY}
+
+
+# installs postgres
+RUN pip install psycopg2[binary]
+
+# copy the bin (start commands)
+COPY ./bin/ ./bin/
+
+# copies backend imports
+COPY ./backend/requirements.txt ./backend/
+
+# imports our backend deps
+RUN pip install -r ./backend/requirements.txt
+
+# copies the backend app
+COPY ./backend/ ./backend
+
+# bring in the frontend folder
+COPY --from=frontend /frontend/dist ./frontend/dist
+
+
+EXPOSE 5000
+
+CMD ["bash", "./bin/start.sh"]
