@@ -6,8 +6,12 @@
   bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
+
 
 #modal-background {
   position: fixed;
@@ -19,6 +23,14 @@
 }
 
 #modal-content {
-  position: absolute;
-  background-color:white;
+  position: relative;
+  background-color: #111;
+  margin: 100px 0;
+  color: white;
+  padding: 2rem;
+  border: 2px solid yellow;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }

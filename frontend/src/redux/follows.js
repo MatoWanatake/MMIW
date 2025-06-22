@@ -12,23 +12,39 @@ const setFollows = (follows) => ({ type: SET_FOLLOWS, follows });
 
 // Thunks
 
+// grabs cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+
 // follow a user
 
 export const followUser = (followee_id) => async (dispatch) => {
-    const res = await fetch('http://localhost:8000/api/follow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ followed_id: followee_id })
+    const res = await fetch('/api/follow', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrf_token')
+      },
+      credentials: 'include',
+      body: JSON.stringify({ followed_id: followee_id })
     });
 
     if (res.ok) {
-        const data = await res.json();
-        dispatch(addFollow(data));
-        return data;
+      const data = await res.json();
+      dispatch(addFollow(data));
+      dispatch(fetchFollows());
+      return data;
     }
-    return await res.json();
-};
+
+    const err = await res.json();
+    console.error("Follow error:", err);
+    return err;
+  };
+
 
 // unfollow a user
 
@@ -40,6 +56,8 @@ export const unfollowUser = (follow_id) => async (dispatch) => {
 
     if (res.ok) {
         dispatch(removeFollow(follow_id));
+        dispatch(fetchFollows());
+
         return true;
     }
     return false;

@@ -1,0 +1,29 @@
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+
+  .tag-item {
+    background-color: #d31919;
+    border: 2px solid yellow;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .delete-tag-btn {
+    background: none;
+    border: none;
+    color: yellow;
+    font-size: 1.2rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
+
+  .delete-tag-btn:hover {
+    color: white;
+  }

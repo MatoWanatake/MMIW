@@ -20,12 +20,13 @@ export default function CommentSection({ storyId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const res = await dispatch(createComment({ story_id: storyId, content }));
-        if (res.error) {
-            setErrors([res.error]);
+        if (res.errors) {
+            setErrors(Object.values(res.errors));
         } else {
             setContent('');
             setErrors([]);
         }
+
     };
 
     return (

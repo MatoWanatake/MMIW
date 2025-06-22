@@ -5,7 +5,6 @@ import { thunkLogin } from "../../redux/session";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
-
 function LoginFormModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,9 +16,7 @@ function LoginFormModal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Logging in with", email, password);
     const result = await dispatch(thunkLogin({ email, password }));
-    // thunkLogin returns either user-data or error-object
     if (result.errors) {
       setErrors(result.errors);
     } else {
@@ -28,11 +25,17 @@ function LoginFormModal() {
     }
   };
 
-  // const quickLogin = async ({ email, password }) => {
-  //   // we still need to prevent the form submission
-  //   const fakeEvent = { preventDefault: () => {} };
-  //   await handleSubmit({ ...fakeEvent, target: null }, email, password);
-  // };
+  const handleDemoLogin = async () => {
+    const result = await dispatch(
+      thunkLogin({ email: "demo@user.io", password: "password" })
+    );
+    if (result.errors) {
+      setErrors(result.errors);
+    } else {
+      closeModal();
+      navigate("/");
+    }
+  };
 
   return (
     <div className="login-form-modal">
@@ -69,6 +72,12 @@ function LoginFormModal() {
 
         <div className="row full">
           <button type="submit">Log In</button>
+        </div>
+
+        <div className="row full">
+          <button type="button" onClick={handleDemoLogin}>
+            Log In as Demo User
+          </button>
         </div>
       </form>
     </div>

@@ -1,19 +1,64 @@
 .story-detail-container {
-    background-color: black;
-    border: 3px solid yellow;
-    padding: 2rem;
-    margin: 2rem auto;
-    border-radius: 10px;
-    color: white;
-    max-width: 800px;
-  }
+  background-color: black;
+  border: 3px solid yellow;
+  padding: 2rem;
+  margin: 2rem auto;
+  border-radius: 10px;
+  color: white;
+  max-width: 800px;
+  margin-top: 120px;
+}
 
-  .comment-section-container {
-    background-color: #d31919;
-    border: 3px solid yellow;
-    padding: 1.5rem;
-    margin: 2rem auto;
-    border-radius: 10px;
-    color: white;
-    max-width: 800px;
-  }
+.story-detail-container h2 {
+  color: yellow;
+  margin-bottom: 1rem;
+}
+
+.comment-section-container {
+  background-color: #d31919;
+  border: 3px solid yellow;
+  padding: 3.5rem;
+  margin: 2rem auto;
+  border-radius: 10px;
+  color: white;
+  max-width: 800px;
+}
+
+.comment-section-container h3 {
+  color: yellow;
+  margin-bottom: 1rem;
+}
+
+.comment-section-container textarea,
+.comment-section-container input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: none;
+  margin-bottom: 1rem;
+}
+.story-tags {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid yellow;
+}
+
+.tag-pill {
+  display: inline-block;
+  background-color: yellow;
+  color: black;
+  padding: 0.4rem 0.75rem;
+  margin: 0.3rem 0.5rem 0 0;
+  border-radius: 20px;
+  font-weight: bold;
+  position: relative;
+}
+
+.tag-delete {
+  background: none;
+  border: none;
+  color: red;
+  font-weight: bold;
+  margin-left: 5px;
+  cursor: pointer;
+}

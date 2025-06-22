@@ -6,3 +6,29 @@ body {
     min-height: 100vh;
     margin: 0;
   }
+  button {
+    background-color: gold; /* dark red */
+    color: #fff; /* white text */
+    border: 2px solid black;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 2px 2px 0 black;
+  }
+
+  button:hover {
+    background-color: yellow;
+    box-shadow: 3px 3px 0 black;
+    transform: translateY(-2px);
+  }
+
+  button:disabled {
+    background-color: #ccc;
+    color: #666;
+    border-color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+  }

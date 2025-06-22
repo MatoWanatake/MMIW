@@ -29,49 +29,51 @@ export default function EditStoryForm({ story, onClose }) {
     }
   }
 
-  return (
-    <form className="story-form" onSubmit={handleSubmit}>
-      <h2>Edit Story</h2>
-      {errors.map(e => <p key={e} className="error">{e}</p>)}
-      <input
-        name="title"
-        type="text"
-        placeholder="Title"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        required
-      />
-      <textarea
-        name="content"
-        placeholder="Content"
-        value={content}
-        onChange={e => setContent(e.target.value)}
-        required
-      />
-      <input
-        name="country"
-        type="text"
-        placeholder="Country"
-        value={country}
-        onChange={e => setCountry(e.target.value)}
-        required
-      />
-      <input
-        name="stateOrRegion"
-        type="text"
-        placeholder="State / Region"
-        value={stateOrRegion}
-        onChange={e => setStateOrRegion(e.target.value)}
-        required
-      />
-      <input
-        name="status"
-        type="text"
-        placeholder="Status (optional)"
-        value={status}
-        onChange={e => setStatus(e.target.value)}
-      />
-      <button type="submit">Save</button>
-    </form>
-  )
-}
+    return (
+      <div className="modal-content">
+        <form className="story-form" onSubmit={handleSubmit}>
+          <h2>Edit Story</h2>
+          {errors.map(e => <p key={e} className="error">{e}</p>)}
+          <input
+           name="title"
+           type="text"
+            placeholder="Title"
+           value={title}
+            onChange={e => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            name="content"
+            placeholder="Content"
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            required
+          />
+          <input
+            name="country"
+            type="text"
+            placeholder="Country"
+            value={country}
+            onChange={e => setCountry(e.target.value)}
+            required
+          />
+          <input
+            name="stateOrRegion"
+            type="text"
+            placeholder="State / Region"
+            value={stateOrRegion}
+            onChange={e => setStateOrRegion(e.target.value)}
+            required
+          />
+          <input
+            name="status"
+            type="text"
+            placeholder="Status (optional)"
+            value={status}
+            onChange={e => setStatus(e.target.value)}
+          />
+          <button type="submit">Save</button>
+        </form>
+      </div>
+    );
+ }

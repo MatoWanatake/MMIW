@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllTags } from "../../redux/tags"; // optional global fetch
+import { fetchAllTags } from "../../redux/tags";
 import TagList from "./TagList";
 
 export default function TagsPage() {
@@ -8,7 +8,7 @@ export default function TagsPage() {
   const tags = useSelector((state) => state.tags);
 
   useEffect(() => {
-    dispatch(fetchAllTags()); // You’d need to implement this if desired
+    dispatch(fetchAllTags());
   }, [dispatch]);
 
   return (

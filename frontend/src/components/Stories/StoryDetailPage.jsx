@@ -1,110 +1,62 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchStory,
-  deleteStory,
-  selectCurrentStory
-} from "../../redux/stories";
-import { selectCurrentUser } from "../../redux/session";
-import StoryDetail from "./StoryDetail";
-import EditStoryForm from "./EditStoryForm";
-import CommentSection from "../Comments/CommentSection";
-import { fetchTags, createTag, deleteTag } from "../../redux/tags";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { fetchStory } from '../../redux/stories';
+import { deleteTag } from '../../redux/tags';
+import FollowButton from '../Follows/FollowButton';
+import EditStoryModal from './EditStoryModal';
 import './StoryDetailPage.css';
-import FollowButton from "../Follows/FollowButton";
-
 
 export default function StoryDetailPage() {
-  const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const story = useSelector(selectCurrentStory);
-  const currentUser = useSelector(selectCurrentUser);
-  const tags = useSelector((state) => state.tags);
-  const [showEdit, setShowEdit] = useState(false);
-  const [newTag, setNewTag] = useState("");
+  const { storyId } = useParams();
+  const story = useSelector((state) => state.stories.current);
+  const currentUser = useSelector((state) => state.session.user);
 
   useEffect(() => {
-    dispatch(fetchStory(id));
-    dispatch(fetchTags(id));
-  }, [dispatch, id]);
+    if (storyId) dispatch(fetchStory(storyId));
+  }, [dispatch, storyId]);
 
-  const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this story?")) {
-      const success = await dispatch(deleteStory(story.id));
-      if (success) navigate("/stories");
-    }
-  };
-
-  const handleAddTag = (e) => {
-    e.preventDefault();
-    if (newTag.trim()) {
-      dispatch(createTag(newTag.trim(), id));
-      setNewTag("");
-    }
+  const handleDeleteTag = (tagId) => {
+    dispatch(deleteTag(tagId));
   };
 
   if (!story) return <p>Loading...</p>;
 
   return (
-    <div>
-      <div className="story-detail-container">
-        <StoryDetail story={story} />
-        <p className="story-author">By: {story.username}</p>
-
-        {currentUser?.id !== story.user_id && (
-          <FollowButton user={story} currentUser={currentUser} />
-        )}
-
-        {currentUser?.id === story.user_id && (
-          <>
-            {!showEdit && (
-              <button onClick={() => setShowEdit(true)}>Edit</button>
-            )}
-            <button onClick={handleDelete}>Delete</button>
-          </>
-        )}
-
-        {showEdit && (
-          <EditStoryForm
-            story={story}
-            onClose={() => {
-              setShowEdit(false);
-              dispatch(fetchStory(id));
-            }}
+    <div className="story-detail-container">
+      <h2>{story.title}</h2>
+      <p>
+        <strong>Author:</strong> {story.username}{' '}
+        {currentUser && currentUser.id !== story.user_id && (
+          <FollowButton
+            user={{ id: story.user_id }}
+            currentUser={currentUser}
           />
         )}
+        {currentUser?.id === story.user_id && (
+          <EditStoryModal story={story} />
+        )}
+      </p>
+      <p><strong>Location:</strong> {story.state_or_region}, {story.country}</p>
+      <p><strong>Status:</strong> {story.status || 'N/A'}</p>
+      <p>{story.content}</p>
 
-        <section>
-          <h4>Tags</h4>
-          <ul>
-            {(tags || []).map((tag) => (
-              <li key={tag.id}>
-                {tag.name}
-                {currentUser?.id === story.user_id && (
-                  <button onClick={() => dispatch(deleteTag(tag.id))}>x</button>
-                )}
-              </li>
-            ))}
-          </ul>
-
-          {currentUser?.id === story.user_id && (
-            <form onSubmit={handleAddTag}>
-              <input
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                placeholder="Add tag"
-              />
-              <button type="submit">Add</button>
-            </form>
-          )}
-        </section>
-      </div>
-
-      <div className="comment-section-container">
-        <CommentSection storyId={story.id} />
-      </div>
+      {story.tags?.length > 0 && (
+        <div className="story-tags">
+          <strong>Tags:</strong>
+          {story.tags.map((tag) => (
+            <span key={tag.id} className="tag-pill">
+              {tag.name}
+              {currentUser?.id === story.user_id && (
+                <button className="tag-delete" onClick={() => handleDeleteTag(tag.id)}>
+                  ❌
+                </button>
+              )}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

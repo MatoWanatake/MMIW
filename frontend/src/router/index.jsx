@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
         element: <CreateStoryPage />,
       },
       {
-        path: "stories/:id",
+        path: "stories/:storyId",
         element: <StoryDetailPage />,
       },
       {
