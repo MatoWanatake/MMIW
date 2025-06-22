@@ -11,8 +11,16 @@ def create_comment():
     story_id = data.get('story_id')
     content = data.get('content', '').strip()
 
-    if not story_id or not content:
-        abort(400, description="story_id and content are required")
+    errors = {}
+
+    if not story_id:
+        errors["story"] = "Story reference is missing. Please refresh and try again."
+
+    if not content:
+        errors["content"] = "Comment cannot be empty or just spaces."
+
+    if errors:
+        return jsonify({"errors": errors}), 400
 
     Story.query.get_or_404(story_id)
 

@@ -4,15 +4,12 @@ from uuid import uuid4
 from flask import request, jsonify, current_app
 from flask_login import login_required, current_user
 from werkzeug.exceptions import HTTPException
-from app.models import Story, Photo, db
+from app.models import Story, Photo, Tag, db  # ← add Tag
 from . import stories_bp
-
 
 @stories_bp.route('', methods=['POST'])
 @login_required
 def create_story():
-    print("🛎️  create_story called with form:", request.form.to_dict(), "files:", request.files)
-
     try:
         data = request.get_json(force=True) or {}
 
@@ -24,7 +21,7 @@ def create_story():
         status          = data.get('status', None)
 
         if not all([title, content, country, state_or_region]):
-            return jsonify({"error": "Missing one of [title, content, country, state_or_region, status]"}), 400
+            return jsonify({"error": "Missing one of [title, content, country, state_or_region]"}), 400
 
         # 1) create story record
         new_story = Story(
@@ -59,18 +56,28 @@ def create_story():
             url = f"{request.url_root.rstrip('/')}/uploads/{filename}"
             db.session.add(Photo(story_id=new_story.id, url=url))
 
-        # 3) commit all
+        # 3) handle tags (if any)
+        tag_names = data.get('tags', [])
+        for name in tag_names:
+            name = name.strip()
+            if not name:
+                continue
+
+            tag = Tag.query.filter_by(name=name).first()
+            if not tag:
+                tag = Tag(name=name)
+                db.session.add(tag)
+
+            new_story.tags.append(tag)
+
         db.session.commit()
-        return jsonify(new_story.to_dict(include_photos=True)), 201
+        return jsonify(new_story.to_dict(include_tags=True, include_photos=True)), 201
 
     except HTTPException:
-        # Let Flask handle its own HTTP errors (400, 401, etc)
         raise
 
     except Exception as e:
-        # Roll back and give me something useful
         traceback.print_exc()
-
         db.session.rollback()
         current_app.logger.error(traceback.format_exc())
         return jsonify({

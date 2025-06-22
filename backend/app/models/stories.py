@@ -60,7 +60,8 @@ class Story(db.Model):
             'created_at':      self.created_at.isoformat(),
             'updated_at':      self.updated_at.isoformat(),
             'user_id':         self.user_id,
-            'username':        self.user.username
+            'username':        self.user.username,
+            'tags':            [tag.to_dict() for tag in self.tags]
         }
 
         if include_tags:
