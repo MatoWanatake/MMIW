@@ -1,0 +1,11 @@
+.comment-item {
+    border: 2px solid yellow;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    background-color: #111;
+    color: white;
+  }
+  .comment-buttons button {
+    margin-right: 0.5rem;
+  }

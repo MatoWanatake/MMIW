@@ -10,6 +10,7 @@ import UsersList from '../components/Users/UsersList';
 import FollowingList from '../components/Follows/FollowingList';
 import FollowersList from '../components/Follows/FollowersList';
 import HomePage from '../components/Homepage/HomePage';
+import UserStoriesPage from '../components/Stories/UserStoriesPage';
 
 
 export const router = createBrowserRouter([
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: "/users/:id/followers",
         element: <FollowersList />
+      },
+      {
+        path: "/users/:userId/stories",
+        element: <UserStoriesPage />
       }
     ],
   },

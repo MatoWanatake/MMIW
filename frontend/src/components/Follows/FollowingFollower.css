@@ -16,3 +16,13 @@
     color: #ffd700;
     text-align: center;
   }
+  .follow-user-link {
+    color: gold;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .follow-user-link:hover {
+    color: yellow;
+    text-decoration: underline;
+  }

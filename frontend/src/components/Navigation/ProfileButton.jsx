@@ -73,6 +73,13 @@ function ProfileButton() {
             </>
           ) : (
             <>
+              {errors.length > 0 && (
+                <li className="error">
+                  {errors.map((err, idx) => (
+                    <div key={idx}>{err}</div>
+                  ))}
+                </li>
+              )}
               <OpenModalMenuItem
                 itemText="Log In"
                 onItemClick={closeMenu}
@@ -93,5 +100,4 @@ function ProfileButton() {
     </>
   );
 }
-
 export default ProfileButton;

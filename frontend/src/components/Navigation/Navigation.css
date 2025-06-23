@@ -58,5 +58,6 @@
   padding: 0.5rem;
   z-index: 1001;
   min-width: 150px;
-  color: yellow
+  color: yellow;
+  cursor: pointer;
 }

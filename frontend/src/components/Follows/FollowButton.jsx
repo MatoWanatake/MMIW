@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { followUser, unfollowUser, fetchFollows } from "../../redux/follows";
+import { followUser, unfollowUser } from "../../redux/follows";
 
 
 

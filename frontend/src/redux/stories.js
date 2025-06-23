@@ -4,6 +4,7 @@ const LOAD_STORY = 'stories/LOAD_STORY';
 const ADD_STORY = 'stories/ADD_STORY';
 const UPDATE_STORY = 'stories/UPDATE_STORY';
 const REMOVE_STORY = 'stories/REMOVE_STORY';
+const SET_USER_STORIES = 'stories/SET_USER_STORIES';
 
 // action creators
 const loadStories = stories => ({ type: LOAD_STORIES, stories });
@@ -11,6 +12,7 @@ const loadStory = story => ({ type: LOAD_STORY, story });
 const addStory = story => ({ type: ADD_STORY, story });
 const updateStoryAC = story => ({ type: UPDATE_STORY, story });
 const removeStory = id => ({ type: REMOVE_STORY, storyId: id});
+const setUserStories = (stories) => ({ type: SET_USER_STORIES, stories });
 
 // THUNKS
 
@@ -31,6 +33,17 @@ export const fetchStory = id => async dispatch => {
         dispatch(loadStory(data));
     }
 };
+
+//fetch all stories by author
+export const fetchStoriesByUser = (userId) => async (dispatch) => {
+    const res = await fetch(`/api/stories/user/${userId}`);
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(setUserStories(data.stories));
+    }
+  };
+
+
 
 // create story
 export const createStory = storyData => async dispatch => {
@@ -90,6 +103,8 @@ export default function storiesReducer(state = initialState, action) {
             return { ...state, all: action.stories };
         case LOAD_STORY:
             return { ...state, current: action.story };
+        case SET_USER_STORIES:
+            return { ...state, userStories: action.stories };
         case ADD_STORY:
             return {...state, all: [...state.all, action.story] };
         case UPDATE_STORY:

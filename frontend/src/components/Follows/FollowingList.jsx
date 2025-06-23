@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import UserCard from "../Users/UserCard";
+import { Link } from 'react-router-dom'
 import "./FollowingFollower.css";
 
 export default function FollowingList() {
@@ -40,7 +40,13 @@ export default function FollowingList() {
     <section className="follow-container">
       <h2 className="follow-title">People You Follow</h2>
       {following.length > 0 ? (
-        following.map((user) => <UserCard key={user.id} user={user} />)
+        following.map((user) => (
+          <div key={user.id} className="follow-user-card">
+            <Link to={`/users/${user.id}/stories`} className="follow-user-link">
+              {user.username}
+            </Link>
+          </div>
+        ))
       ) : (
         <p>You’re not following anyone yet.</p>
       )}
