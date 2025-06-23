@@ -20,8 +20,20 @@ def create_story():
         state_or_region = data.get('state_or_region', '').strip()
         status          = data.get('status', None)
 
-        if not all([title, content, country, state_or_region]):
-            return jsonify({"error": "Missing one of [title, content, country, state_or_region]"}), 400
+        errors = {}
+
+        if not title:
+            errors['title'] = "Please provide a title for the story."
+        if not content:
+            errors['content'] = "Please provide content for the story."
+        if not country:
+            errors['country'] = "Please specify a country."
+        if not state_or_region:
+            errors['state_or_region'] = "Please specify a state or region."
+
+        if errors:
+            return jsonify({"errors": errors}), 400
+
 
         # 1) create story record
         new_story = Story(
