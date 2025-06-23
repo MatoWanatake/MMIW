@@ -11,117 +11,121 @@ const loadStories = stories => ({ type: LOAD_STORIES, stories });
 const loadStory = story => ({ type: LOAD_STORY, story });
 const addStory = story => ({ type: ADD_STORY, story });
 const updateStoryAC = story => ({ type: UPDATE_STORY, story });
-const removeStory = id => ({ type: REMOVE_STORY, storyId: id});
+const removeStory = id => ({ type: REMOVE_STORY, storyId: id });
 const setUserStories = (stories) => ({ type: SET_USER_STORIES, stories });
 
 // THUNKS
 
-//fetch story list
+// fetch story list
 export const fetchStories = () => async dispatch => {
-    const res = await fetch('/api/stories', { credentials: 'include' });
-    if (res.ok) {
-        const data = await res.json();
-        dispatch(loadStories(data));
-    }
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stories`, {
+    credentials: 'include'
+  });
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(loadStories(data));
+  }
 };
 
-//fetch one story
+// fetch one story
 export const fetchStory = id => async dispatch => {
-    const res = await fetch(`/api/stories/${id}`, { credentials: 'include' });
-    if (res.ok) {
-        const data = await res.json();
-        dispatch(loadStory(data));
-    }
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stories/${id}`, {
+    credentials: 'include'
+  });
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(loadStory(data));
+  }
 };
 
-//fetch all stories by author
+// fetch all stories by author
 export const fetchStoriesByUser = (userId) => async (dispatch) => {
-    const res = await fetch(`/api/stories/user/${userId}`);
-    if (res.ok) {
-      const data = await res.json();
-      dispatch(setUserStories(data.stories));
-    }
-  };
-
-
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stories/user/${userId}`, {
+    credentials: 'include'
+  });
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(setUserStories(data.stories));
+  }
+};
 
 // create story
 export const createStory = storyData => async dispatch => {
-    const res = await fetch('/api/stories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(storyData)
-    });
-    if (res.ok) {
-        const data = await res.json();
-        dispatch(addStory(data));
-        return data;
-    }
-    return await res.json();
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stories`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(storyData)
+  });
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(addStory(data));
+    return data;
+  }
+  return await res.json();
 };
 
 // update story
 export const updateStory = (id, storyData) => async dispatch => {
-    const res = await fetch(`/api/stories/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(storyData)
-    });
-    if (res.ok) {
-        const data = await res.json();
-        dispatch(updateStoryAC(data));
-        return data;
-    }
-    return await res.json();
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stories/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(storyData)
+  });
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(updateStoryAC(data));
+    return data;
+  }
+  return await res.json();
 };
 
 // delete story
 export const deleteStory = id => async dispatch => {
-    const res = await fetch(`/api/stories/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-    });
-    if (res.ok) {
-        dispatch(removeStory(id));
-        return true;
-    }
-    return false;
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/stories/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  if (res.ok) {
+    dispatch(removeStory(id));
+    return true;
+  }
+  return false;
 };
 
 // REDUCER
 
 const initialState = {
-    all: [],
-    current: null,
+  all: [],
+  current: null,
 };
 
 export default function storiesReducer(state = initialState, action) {
-    switch (action.type) {
-        case LOAD_STORIES:
-            return { ...state, all: action.stories };
-        case LOAD_STORY:
-            return { ...state, current: action.story };
-        case SET_USER_STORIES:
-            return { ...state, userStories: action.stories };
-        case ADD_STORY:
-            return {...state, all: [...state.all, action.story] };
-        case UPDATE_STORY:
-            return {
-                ...state,
-                all: state.all.map(s => s.id === action.story.id ? action.story :s),
-                current: action.story
-            };
-        case REMOVE_STORY:
-            return {
-                ...state,
-                all: state.all.filter(s => s.id !== action.storyId),
-                current: state.current?.id === action.storyId ? null : state.current
-            };
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case LOAD_STORIES:
+      return { ...state, all: action.stories };
+    case LOAD_STORY:
+      return { ...state, current: action.story };
+    case SET_USER_STORIES:
+      return { ...state, userStories: action.stories };
+    case ADD_STORY:
+      return { ...state, all: [...state.all, action.story] };
+    case UPDATE_STORY:
+      return {
+        ...state,
+        all: state.all.map(s => s.id === action.story.id ? action.story : s),
+        current: action.story
+      };
+    case REMOVE_STORY:
+      return {
+        ...state,
+        all: state.all.filter(s => s.id !== action.storyId),
+        current: state.current?.id === action.storyId ? null : state.current
+      };
+    default:
+      return state;
+  }
 }
 
 export const selectAllStories = state => state.stories.all;

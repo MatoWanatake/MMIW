@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCommentsByStory, createComment } from "../../redux/comments";
 import { selectCurrentUser } from "../../redux/session";
 import CommentList from "./CommentList";
-import './CommentSection.css';
+import { useParams } from "react-router-dom";
+import "./CommentSection.css";
 
-export default function CommentSection({ storyId }) {
+export default function CommentSection() {
+  const { storyId } = useParams();
   const dispatch = useDispatch();
   const comments = useSelector((state) => state.comments);
   const currentUser = useSelector(selectCurrentUser);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
@@ -18,11 +20,25 @@ export default function CommentSection({ storyId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await dispatch(createComment({ story_id: storyId, content }));
+
+    if (!content.trim()) {
+      setErrors(["Comment cannot be empty or just spaces."]);
+      return;
+    }
+
+    const payload = {
+      story_id: Number(storyId),
+      content,
+    };
+
+    console.log("createComment payload:", payload);
+
+    const res = await dispatch(createComment(payload));
+
     if (res.errors) {
       setErrors(Object.values(res.errors));
     } else {
-      setContent('');
+      setContent("");
       setErrors([]);
     }
   };

@@ -11,56 +11,60 @@ const removeUser = () => ({
 });
 
 export const thunkAuthenticate = () => async (dispatch) => {
-    const response = await fetch("/api/auth/");
-    if (response.ok) {
-        const data = await response.json();
-        if (data.errors) {
-            return;
-        }
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/`, {
+    credentials: 'include'
+  });
 
-        dispatch(setUser(data));
+  if (response.ok) {
+    const data = await response.json();
+    if (!data.errors) {
+      dispatch(setUser(data));
     }
+  }
 };
 
-export const thunkLogin = (credentials) => async dispatch => {
-  console.log(JSON.stringify(credentials))
-  const response = await fetch("/api/auth/login", {
+export const thunkLogin = (credentials) => async (dispatch) => {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: 'include',
     body: JSON.stringify(credentials)
   });
 
-  if(response.ok) {
+  if (response.ok) {
     const data = await response.json();
     dispatch(setUser(data));
   } else if (response.status < 500) {
     const errorMessages = await response.json();
-    return errorMessages
+    return errorMessages;
   } else {
-    return { server: "Something went wrong. Please try again" }
+    return { server: "Something went wrong. Please try again" };
   }
 };
 
 export const thunkSignup = (user) => async (dispatch) => {
-  const response = await fetch("/api/auth/signup", {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: 'include',
     body: JSON.stringify(user)
   });
 
-  if(response.ok) {
+  if (response.ok) {
     const data = await response.json();
     dispatch(setUser(data));
   } else if (response.status < 500) {
     const errorMessages = await response.json();
-    return errorMessages
+    return errorMessages;
   } else {
-    return { server: "Something went wrong. Please try again" }
+    return { server: "Something went wrong. Please try again" };
   }
 };
 
 export const thunkLogout = () => async (dispatch) => {
-  await fetch("/api/auth/logout");
+  await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
+    credentials: 'include'
+  });
   dispatch(removeUser());
 };
 

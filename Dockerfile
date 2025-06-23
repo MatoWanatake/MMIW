@@ -20,7 +20,7 @@ WORKDIR /var/www
 
 # environment varialbes
 ENV FLASK_APP=app
-ENV FLAKS_ENV=production
+ENV FLASK_ENV=production
 
 # fill these 3 in on docker container / render environments
 ARG SCHEMA

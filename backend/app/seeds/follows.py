@@ -1,12 +1,13 @@
 # app/seeds/follows.py
 from app.models import db, Follow
 
-def seed_follows():
-    f1 = Follow(follower_id=2, followed_id=1)
-    f2 = Follow(follower_id=3, followed_id=1)
-    f3 = Follow(follower_id=3, followed_id=2)
-    db.session.add_all([f1, f2, f3])
+def seed_follows(users):
+    follow1 = Follow(follower_id=users[0].id, followed_id=users[1].id)
+    follow2 = Follow(follower_id=users[1].id, followed_id=users[2].id)
+
+    db.session.add_all([follow1, follow2])
     db.session.commit()
+
 
 def undo_follows():
     Follow.query.delete()
