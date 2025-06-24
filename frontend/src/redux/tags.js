@@ -44,6 +44,8 @@ export const fetchAllTags = () => async (dispatch) => {
 
 // delete a tag
 export const deleteTag = (tagId) => async (dispatch) => {
+  console.log("🛠️ deleteTag(): sending DELETE to:", `${import.meta.env.VITE_BACKEND_URL}/api/tags/${tagId}`);
+
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tags/${tagId}`, {
     method: 'DELETE',
     credentials: 'include'

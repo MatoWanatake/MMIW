@@ -54,7 +54,10 @@ app.register_blueprint(tags_bp)
 # Extensions
 db.init_app(app)
 Migrate(app, db)
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+CORS(app, supports_credentials=True, origins=[
+    "http://localhost:5173",
+    "https://mmiw-latest2-1.onrender.com",
+])
 
 
 # ─── HTTPS redirect in production ───────────────────────────────
